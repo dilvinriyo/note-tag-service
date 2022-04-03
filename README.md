@@ -1,5 +1,5 @@
 # Note tag service
-This service is created using Laravel 8.83.6 API Resource. It has Teams, Users, Notes and NoteUserTags.
+This service is created using Laravel 8.83.6 API Resource. It has Teams, Users, Notes and Note user tags.
 
 #### Following are the Models
 * Team
@@ -12,15 +12,24 @@ Clone the project via git clone or download the zip file.
 
 ##### .env
 Copy contents of .env.example file to .env file. Create a database and add credentials in .env file.
+
 ##### Composer Install
 cd into the project directory via terminal and run the following command to install composer packages.
 ###### `composer install`
+
 ##### Run Migration
 then run the following command to create migrations in the database.
 ###### `php artisan migrate`
+
 ##### Run the service
 then run the following command to start the service
 ###### `php artisan serve`
+
+##### Steps for testing
+1. Create teams
+2. Create users
+3. Create notes
+4. Tag users to notes
 
 ### API EndPoints
 ##### Team
