@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Services\UserService;
@@ -23,6 +24,16 @@ class UserController extends Controller
         // default settings
         $result   = [];
         $response = [];
+
+        // validate request
+        $validator = Validator::make($request->all(), ['full_name' => 'required','email' => 'required|email', 'team_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
 
         // check if team exists or not, if not return failed response
         $is_team_exists = $this->teamService->isTeamExistsById($request->team_id);
@@ -72,6 +83,16 @@ class UserController extends Controller
         // default settings
         $result   = [];
         $response = [];
+
+        // validate request
+        $validator = Validator::make($request->all(), ['user_id' => 'required|int', 'full_name' => 'required','email' => 'required|email', 'team_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
 
         // check if user exists or not, if not return failed response
         $is_user_exists = $this->service->isUserExistsById($request->user_id);
@@ -130,6 +151,16 @@ class UserController extends Controller
         // default settings
         $result   = [];
         $response = [];
+
+        // validate request
+        $validator = Validator::make($request->all(), ['user_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
 
         // check if user exists or not, if not return failed response
         $is_user_exists = $this->service->isUserExistsById($request->user_id);

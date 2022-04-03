@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Services\TeamService;
@@ -14,7 +15,7 @@ class TeamController extends Controller
     }
 
     /**
-     * To create a time
+     * To create a team
      */
     public function createTeam(Request $request)
     {
@@ -22,7 +23,17 @@ class TeamController extends Controller
         $result   = [];
         $response = [];
 
-        // check if team already exists, if yes return failed response
+        // validate request
+        $validator = Validator::make($request->all(), ['name' => 'required','description' => 'required']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
+
+        // check if team name already exists, if yes return failed response
         $is_exists = $this->service->isTeamExistsByName($request->name);
         if ($is_exists) {
             $response = [

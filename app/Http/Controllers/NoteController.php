@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 use App\Services\NoteService;
@@ -16,6 +17,7 @@ class NoteController extends Controller
         $this->userService  = $userService;
         $this->tagService   = $tagService;
     }
+
     /**
      * To create a note
      */
@@ -24,6 +26,16 @@ class NoteController extends Controller
         // default settings
         $result   = [];
         $response = [];
+
+        // validate request
+        $validator = Validator::make($request->all(), ['title' => 'required', 'description' => 'required', 'created_user_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
 
         // check if user exists or not, if not return failed response
         $is_user_exists = $this->userService->isUserExistsById($request->created_user_id);
@@ -64,6 +76,16 @@ class NoteController extends Controller
         $result   = [];
         $response = [];
 
+        // validate request
+        $validator = Validator::make($request->all(), ['note_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
+
         // check if note exists or not, if not return failed response
         $is_note_exists = $this->service->isNoteExistsById($request->note_id);
         if (!$is_note_exists) {
@@ -101,6 +123,16 @@ class NoteController extends Controller
         // default settings
         $result   = [];
         $response = [];
+
+        // validate request
+        $validator = Validator::make($request->all(), ['note_id' => 'required|int', 'user_id' => 'required|int']);
+        if($validator->fails()){
+            $response = [
+                'code'    => config('api.code.failed'),
+                'message' => $validator->errors(),
+            ];
+            return response()->json($response, 200);
+        }
 
         // check if note exists or not, if not return failed response
         $note = $this->service->getNoteById($request->note_id);
